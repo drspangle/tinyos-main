@@ -1,0 +1,123 @@
+Finger2IPv6 - UDP Console Based IPv6 Policy System
+Created by Daniel Smullen
+Please report bugs to: Daniel.Smullen@uoit.net
+
+README
+******
+
+Contents:
+
+1. Installation Instructions and Build Environment Prerequisites
+2. Supported Wireless Sensor Platforms
+3. Testing Instructions
+4. License and Acknowledgements
+
+************************************************************
+************************************************************
+
+
+1. Installation Instructions and Build Environment Prerequisites
+****************************************************************
+In order to build the Finger2IPv6 binary, you require the following:
+
+-Linux with gcc and build-essential 4.6.3 is required. Development and
+testing was performed on Ubuntu 12.04.2 LTS as it has long term support.
+Other versions of Linux that come with gcc 4.6.3 should also work.
+
+-Ensure your current user has access to the USB interface. In Ubuntu,
+the following command will add a user to the correct group:
+	sudo usermod -a -G dialout <username>
+After entering the command, log out and then log back in for the changes
+to take effect. In other operating systems, a different group 
+may be required.
+
+-NetCat6 (nc6) must be installed for testing.
+
+-The toolchain must be installed from the 'tinyprod' repository. 
+The msp430-46 version is required. See http://tinyprod.net/debian-dev/ 
+for details.
+
+-TinyOS Development Kit (tinyOS version 2.1.2 or later) 
+must be installed and working.
+
+-All TinyOS Development Kit environment variables must be set up correctly.
+
+-Be sure to check section 2 of this README to ensure that your wireless sensor 
+platform is supported by Finger2IPv6. If your platform is not listed, it is 
+NOT currently supported and it will not compile or load.
+
+-A 6LoWPAN/IPv6 Edge Router must be installed on your network in order to pass
+packets between the 6LoWPAN and IPv6 interfaces on your network.
+For more information, see the PppRouter application documentation.
+
+Installation:
+-Copy the application into the $TOSROOT/apps/finger2ipv6/ folder.
+
+-Open a terminal and navigate to the folder using:
+	cd $TOSROOT/apps/finger2ipv6/
+
+-Compile the application for your desired platform:
+	make <platform> blip
+
+-If compilation is successful, continue. If it fails, ensure you meet the
+prequisites listed at the beginning of this section, and your platform is
+supported.
+
+-Plug your sensor mote in to the USB port. Use the 'motelist' command to
+check the handle to the device. If no other devices are connected,
+this is commonly /dev/ttyUSB0 .
+
+-Recompile and install the compiled binary, invoking the proper flags 
+to install the blip stack, and set the IPv6 address suffix of the device:
+	make <platform> blip install.<address> bsl,<device handle>
+
+
+2. Supported Wireless Sensor Platforms
+**************************************
+telosb 
+-Tested and verified working.
+
+epic 
+-Tested, but not all functions supported.
+See the blip documentation on the tinyOS Wiki for more information.
+
+
+3. Testing Instructions
+***********************
+Provided all prerequisites are met, and the Finger2IPv6 program has been
+successfully installed, you should be able to connect directly to the mote
+using nc6.
+
+You should have provided an IPv6 address suffix when the mote was
+programmed. You will use this to provide the full address of the mote.
+
+Note: the default IPv6 prefix is defined in the MAKEFILE, and is fec0::
+
+Assuming your edge router is up and running, connect to the device using
+its IPv6 address, on port 2000:
+	nc6 -u fec0::<suffix> 2000
+
+If the connection was successful, type 'help' (without quotes) and press
+enter. You should see the help menu for the device, will all commands listed.
+
+The 'f2help' command will give specific help for Finger2IPv6 commands, and the
+policy programming interface provided.
+
+
+4. License and Acknowledgements
+*******************************
+Based on Finger2 - Embedded Policy System for Sensor Networks
+Created by Themistoklis Bourdenas, modified by Nidal Qwasmi
+
+Finger2IPv6 is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Finger2IPv6 is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with Finger2.  If not, see <http://www.gnu.org/licenses/>.
